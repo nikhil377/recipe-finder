@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {Form , FormGroup, FormControl, ControlLabel, Button} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {setRecipes} from '../actions';
 class SearchRecipe extends Component {
     constructor(props){
         super(props);
@@ -18,9 +20,12 @@ class SearchRecipe extends Component {
                 "Content-Type": "text/plain"
             }
         }).then(response=>response.json())
-        .then(data=>console.log("data",data))
+        .then(data=> this.props.setRecipes(data.results));
+        // console.log("this.props", this.props.recipesResult);
+        
     }
     render() {
+        console.log("this.props", this.props)
         return (
             <Form inline>
                 <FormGroup>
@@ -45,4 +50,9 @@ class SearchRecipe extends Component {
         )
     }
 }
-export default SearchRecipe;
+function mapStateToProps(state){
+    return{
+        recipesResult:state
+    };
+}
+export default connect(mapStateToProps,{setRecipes})(SearchRecipe);
