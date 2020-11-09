@@ -14,7 +14,7 @@ class FavoriteRecipeList extends Component {
                {this.props.favoriteRecipe.map((recipe,index)=>{
                    return(
                        <RecipeItem key={index} recipe={recipe}
-                       favoriteButton={false}/>
+                       favoriteButton={true} isChecked={true}/>
                    )
                })}
            </div>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {favoriteRecipe} from '../actions';
+import {favoriteRecipe,unFavoriteRecipe} from '../actions';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 class RecipeItem extends Component {
     constructor(){
         super();
@@ -12,6 +14,15 @@ class RecipeItem extends Component {
         this.props.favoriteRecipe(recipe);
         this.setState({favorited:true});
     }
+    unFavorite(recipe){
+        let recipeToFilter= recipe;
+        let recipeToSend = this.props.recipeItemProps.favoriteRecipes.filter(res=>res!==recipeToFilter);
+        console.log("recipe to send",recipeToSend );
+        this.props.unFavoriteRecipe(recipeToSend[0]);
+        this.props.favoriteRecipe(recipeToSend[0]);
+        
+        this.setState({favorited:false});
+    }
     render() {
         let { recipe } = this.props;
         console.log("innside recipe item", this.props);
@@ -20,8 +31,8 @@ class RecipeItem extends Component {
             <div className="recipe-item">
                {
                    this.props.favoriteButton?
-                        this.state.favorited ?
-                        <div className="star">
+                        this.state.favorited || this.props.isChecked?
+                        <div className="star" onClick={()=>this.unFavorite(recipe)}>
                             &#9733;
                         </div> 
                     : 
@@ -52,4 +63,12 @@ class RecipeItem extends Component {
         )
     }
 }
-export default connect(null,{favoriteRecipe})(RecipeItem);
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({ favoriteRecipe,unFavoriteRecipe }, dispatch)
+}
+function mapStateToProps(state){
+    return{
+        recipeItemProps:state
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(RecipeItem);
